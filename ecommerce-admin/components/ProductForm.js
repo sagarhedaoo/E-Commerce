@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import axios from "axios";
 import Spinner from "./Spinner";
@@ -10,22 +10,36 @@ export default function ProductForm({
   description: existingDescription,
   price: existingPrice,
   images: exisitingImages,
+  category: assignedCategory,
 }) {
   const [title, setTitle] = useState(existingTitle || "");
   const [description, setDescription] = useState(existingDescription || "");
   const [price, setPrice] = useState(existingPrice || "");
+  const [category, setCategory] = useState(assignedCategory || "");
   const [goToProducts, setGoToProducts] = useState(false);
   const [images, setImages] = useState(exisitingImages || []);
   const [isUploading, setIsUploading] = useState(false);
+  const [categories, setCategories] = useState([]);
   const router = useRouter();
+  useEffect(() => {
+    axios.get("/api/categories").then((result) => {
+      setCategories(result.data);
+    });
+  }, []);
   async function saveProduct(ev) {
     ev.preventDefault();
-    const data = { title, description, price, images };
-
+    const data = {
+      title,
+      description,
+      price,
+      images,
+      category,
+    };
     if (_id) {
-      ///update
+      //update
       await axios.put("/api/products", { ...data, _id });
     } else {
+      //create
       await axios.post("/api/products", data);
     }
     setGoToProducts(true);
@@ -63,6 +77,18 @@ export default function ProductForm({
         value={title}
         onChange={(ev) => setTitle(ev.target.value)}
       />
+
+      <label>Category</label>
+      <select value={category} onChange={(ev) => setCategory(ev.target.value)}>
+        <option value="">Uncategorized</option>
+        {categories.length > 0 &&
+          categories.map((c) => (
+            <option key={c._id} value={c._id}>
+              {c.name}
+            </option>
+          ))}
+      </select>
+
       <label>Photos</label>
 
       <div className="mb-2 flex flex-wrap gap-1">
