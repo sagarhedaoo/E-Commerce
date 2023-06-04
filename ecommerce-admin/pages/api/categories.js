@@ -14,6 +14,7 @@ export default async function handle(req, res) {
     const categoryDoc = await Category.create({
       name,
       parent: parentCategory || undefined,
+      properties,
     });
     res.json(categoryDoc);
   }
