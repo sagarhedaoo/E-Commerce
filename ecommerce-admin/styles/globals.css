@@ -53,3 +53,7 @@ table.basic a {
 .btn-default {
   @apply bg-gray-500 text-white;
 }
+
+img {
+  max-height: 100%;
+}
