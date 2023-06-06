@@ -3,6 +3,8 @@ import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import fs from "fs";
 import mime from "mime-types";
 import { mongooseConnect } from "@/lib/mongoose";
+import { getServerSession } from "next-auth";
+import { authOptions, isAdminRequest } from "./auth/[...nextauth]";
 
 const bucketName = "sagar-nextjs-ecommerce";
 
