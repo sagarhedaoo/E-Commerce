@@ -1,12 +1,13 @@
 import { css, styled } from "styled-components";
 
-const StyledButton = styled.button`
+export const ButtonStyle = css`
   border: 0;
   padding: 5px 15px;
   border-radius: 5px;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
+  text-decoration: none;
   svg {
     height: 16px;
     margin-right: 5px;
@@ -36,7 +37,7 @@ const StyledButton = styled.button`
       border: 1px solid #5542f6;
       color: #fff;
     `}
-    
+
   ${(props) =>
     props.size === "l" &&
     css`
@@ -46,6 +47,10 @@ const StyledButton = styled.button`
         height: 20px;
       }
     `};
+`;
+
+export const StyledButton = styled.button`
+  ${ButtonStyle}
 `;
 
 export default function Button({ children, ...rest }) {
