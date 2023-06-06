@@ -1,6 +1,7 @@
 import Center from "@/components/Center";
 import { styled } from "styled-components";
 import Button from "@/components/Button";
+import ButtonLink from "./ButtonLink";
 
 const Bg = styled.div`
   background-color: #222;
@@ -21,7 +22,7 @@ const Desc = styled.p`
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 0.9fr 1.1fr;
+  grid-template-columns: 1.1fr 0.9fr;
   gap: 40px;
   img {
     max-width: 100%;
@@ -39,29 +40,24 @@ const ButtonsWrapper = styled.div`
   margin-top: 25px;
 `;
 
-export default function Fetaured() {
+export default function Fetaured({ product }) {
   return (
     <Bg>
       <Center>
         <ColumnsWrapper>
           <Column>
             <div>
-              <Title>Pro anywhere</Title>
-              <Desc>
-                The MacBook Pro 15” (4th Generation) is the current high-end
-                professional offering of laptop computers designed by Apple Inc.
-                The largest and highest performing of the current MacBook
-                family, the Apple MacBook Pro 15” (4th Generation) includes a
-                Touch Bar and can be customized to maximize computing power and
-                specifications. The MacBook Pro 15” (4th Generation) has a 15.4”
-                diagonal Retina display with a resolution of 2880 x 1800 and is
-                available in Space Gray and Silver.
-              </Desc>
+              <Title>{product.title}</Title>
+              <Desc>{product.description}</Desc>
               <ButtonsWrapper>
-                <Button outline white>
+                <ButtonLink
+                  href={"/products/" + product._id}
+                  outline={1}
+                  white={1}
+                >
                   Read More
-                </Button>
-                <Button primary>
+                </ButtonLink>
+                <Button primary={1}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
