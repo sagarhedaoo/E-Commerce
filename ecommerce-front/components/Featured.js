@@ -3,6 +3,8 @@ import { styled } from "styled-components";
 import Button from "@/components/Button";
 import ButtonLink from "./ButtonLink";
 import CartIcon from "./icons/CartIcon";
+import { useContext } from "react";
+import { CartContext } from "@/components/CartContext";
 
 const Bg = styled.div`
   background-color: #222;
@@ -42,6 +44,11 @@ const ButtonsWrapper = styled.div`
 `;
 
 export default function Fetaured({ product }) {
+  const { addProduct } = useContext(CartContext);
+  function addFeaturedToCart() {
+    addProduct(product._id);
+  }
+
   return (
     <Bg>
       <Center>
@@ -58,7 +65,7 @@ export default function Fetaured({ product }) {
                 >
                   Read More
                 </ButtonLink>
-                <Button primary={1}>
+                <Button white onCLick={addFeaturedToCart}>
                   <CartIcon />
                   Add to cart
                 </Button>
