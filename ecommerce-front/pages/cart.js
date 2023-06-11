@@ -7,6 +7,7 @@ import Table from "@/components/Table";
 import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
+import WhiteBox from "@/components/WhiteBox";
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -115,10 +116,10 @@ export default function CartPage() {
         <Header />
         <Center>
           <ColumnsWrapper>
-            <Box>
+            <WhiteBox>
               <h1>Thank you for your purchase!</h1>
               <p>We will email you when your order will be processed</p>
-            </Box>
+            </WhiteBox>
           </ColumnsWrapper>
         </Center>
       </>
@@ -130,7 +131,7 @@ export default function CartPage() {
       <Header />
       <Center>
         <ColumnsWrapper>
-          <Box>
+          <WhiteBox>
             <h2>Cart</h2>
             {!cartProducts?.length && <div>Your Cart is Empty</div>}
             {products?.length > 0 && (
@@ -184,9 +185,9 @@ export default function CartPage() {
                 </tbody>
               </Table>
             )}
-          </Box>
+          </WhiteBox>
           {!!cartProducts?.length && (
-            <Box>
+            <WhiteBox>
               <h2>Order Info</h2>
 
               <Input
@@ -237,7 +238,7 @@ export default function CartPage() {
               <Button black block onClick={goToPayment}>
                 Continue to Payment
               </Button>
-            </Box>
+            </WhiteBox>
           )}
         </ColumnsWrapper>
       </Center>
