@@ -11,7 +11,10 @@ import WhiteBox from "@/components/WhiteBox";
 
 const ColumnsWrapper = styled.div`
   display: grid;
-  grid-template-columns: 1.3fr 0.8fr;
+  grid-template-columns: 1fr;
+  @media screen and (min-width: 768px) {
+    grid-template-columns: 1.3fr 0.8fr;
+  }
   gap: 40px;
   margin-top: 40px;
 `;
@@ -42,7 +45,12 @@ const ProductImageBox = styled.div`
 `;
 
 const QuantityLabel = styled.span`
-  padding: 0 3px;
+  padding: 0 15px;
+  display: block;
+  @media screen and (min-width: 768px) {
+    display: inline-block;
+    padding: 0 10px;
+  }
 `;
 
 const CityHolder = styled.div`
