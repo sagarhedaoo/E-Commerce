@@ -15,8 +15,10 @@
     "micro": "^10.0.1",
     "mongoose": "^7.2.2",
     "next": "13.4.4",
+    "next-reveal": "^1.0.6",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-spinners": "^0.13.8",
     "stripe": "^12.9.0",
     "styled-components": "^6.0.0-rc.3"
   }
