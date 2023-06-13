@@ -6,7 +6,7 @@ import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import ProductBox from "@/components/ProductBox";
 
-export default function CategoryPage({ category, products }) {
+export default function CategoryPage({ category, products, subCategories }) {
   return (
     <>
       <Header />
@@ -28,6 +28,7 @@ export async function getServerSideProps(context) {
     props: {
       category: JSON.parse(JSON.stringify(category)),
       products: JSON.parse(JSON.stringify(products)),
+      subCategories: JSON.parse(JSON.stringify(subCategories)),
     },
   };
 }
