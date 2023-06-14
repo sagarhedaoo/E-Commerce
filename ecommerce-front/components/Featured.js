@@ -5,6 +5,7 @@ import ButtonLink from "./ButtonLink";
 import CartIcon from "./icons/CartIcon";
 import { useContext } from "react";
 import { CartContext } from "@/components/CartContext";
+import FlyingButton from "./FlyingButton";
 
 const Bg = styled.div`
   background-color: #222;
@@ -73,9 +74,6 @@ const ButtonsWrapper = styled.div`
 
 export default function Fetaured({ product }) {
   const { addProduct } = useContext(CartContext);
-  function addFeaturedToCart() {
-    addProduct(product._id);
-  }
 
   return (
     <Bg>
@@ -93,10 +91,11 @@ export default function Fetaured({ product }) {
                 >
                   Read More
                 </ButtonLink>
-                <Button white onCLick={addFeaturedToCart}>
+
+                <FlyingButton white id={product._id} src={product.images?.[0]}>
                   <CartIcon />
                   Add to cart
-                </Button>
+                </FlyingButton>
               </ButtonsWrapper>
             </div>
           </Column>
