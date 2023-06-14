@@ -5,13 +5,103 @@ import Title from "@/components/Title";
 import { Category } from "@/models/Category";
 import { Product } from "@/models/Product";
 import ProductBox from "@/components/ProductBox";
+import { styled } from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
-export default function CategoryPage({ category, products, subCategories }) {
+const CategoryHeader = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  h1 {
+    font-size: 1.5em;
+  }
+`;
+
+const FiltersWrapper = styled.div`
+  display: flex;
+  gap: 15px;
+`;
+
+const Filter = styled.div`
+  background-color: #ddd;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: flex;
+  gap: 5px;
+  color: #444;
+  select {
+    background-color: transparent;
+    border: 0;
+    font-size: inherit;
+    color: #444;
+  }
+`;
+
+export default function CategoryPage({
+  category,
+  products: originalProducts,
+  subCategories,
+}) {
+  const [products, setProducts] = useState(originalProducts);
+  const [filtersValues, setFilterValues] = useState(
+    category.properties.map((p) => ({ name: p.name, value: "all" }))
+  );
+  function handleFilterChange(filterName, filterValue) {
+    setFilterValues((prev) => {
+      return prev.map((p) => ({
+        name: p.name,
+        value: p.name === filterName ? filterValue : p.value,
+      }));
+    });
+  }
+  useEffect(() => {
+    const catIds = [category._id, ...(subCategories?.map((c) => c._id) || [])];
+
+    const params = new URLSearchParams();
+    params.set("categories", catIds.join(","));
+    filtersValues.forEach((f) => {
+      if (f.value !== "all") {
+        params.set(f.name, f.value);
+      }
+    });
+    const url = `/api/products?` + params.toString();
+    axios.get(url).then((res) => {
+      res.data;
+    });
+  }, [filtersValues]);
   return (
     <>
       <Header />
       <Center>
-        <Title>{category.name}</Title>
+        <CategoryHeader>
+          <h1>{category.name}</h1>
+          <FiltersWrapper>
+            {category.properties.map((prop) => (
+              <Filter key={prop.name}>
+                <span>{prop.name}:</span>
+                {
+                  <select
+                    onChange={(ev) =>
+                      handleFilterChange(prop.name, ev.target.value)
+                    }
+                    value={
+                      filtersValues.find((f) => f.name === prop.name).value
+                    }
+                  >
+                    <option value="all">ALL</option>
+                    {prop.values.map((val) => (
+                      <option key={val} value={val}>
+                        {val}
+                      </option>
+                    ))}
+                  </select>
+                }
+              </Filter>
+            ))}
+          </FiltersWrapper>
+        </CategoryHeader>
+
         <ProductsGrid products={products} />
       </Center>
     </>
@@ -23,7 +113,6 @@ export async function getServerSideProps(context) {
   const subCategories = await Category.find({ parent: category._id });
   const catIds = [category._id, ...subCategories.map((c) => c._id)];
   const products = await Product.find({ category: catIds });
-  console.log(products);
   return {
     props: {
       category: JSON.parse(JSON.stringify(category)),
