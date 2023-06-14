@@ -9,6 +9,8 @@ export const ButtonStyle = css`
   display: inline-flex;
   align-items: center;
   text-decoration: none;
+  font-weight: 500;
+  font-size: 16px;
   svg {
     height: 16px;
     margin-right: 5px;

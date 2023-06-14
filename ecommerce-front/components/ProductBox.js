@@ -1,9 +1,11 @@
 import { styled } from "styled-components";
-import Button from "./Button";
+import Button, { ButtonStyle } from "./Button";
 import CartIcon from "./icons/CartIcon";
 import Link from "next/link";
 import { useContext } from "react";
 import { CartContext } from "./CartContext";
+import { primary } from "@/lib/colors";
+import FlyingButton from "./FlyingButton";
 
 const WhiteBox = styled.div`
   background-color: #fff;
@@ -56,6 +58,15 @@ const PriceRow = styled.div`
   margin-top: 2px;
 `;
 
+const FlyingButtonWrapper = styled.div`
+  button {
+    ${ButtonStyle};
+    background-color: transparent;
+    border: 1px solid ${primary};
+    color: ${primary};
+  }
+`;
+
 export default function ProductBox({ _id, title, description, price, images }) {
   const { addProduct } = useContext(CartContext);
   const url = "/product/" + _id;
@@ -71,10 +82,9 @@ export default function ProductBox({ _id, title, description, price, images }) {
 
         <PriceRow>
           <Price>${price}</Price>
-
-          <Button block onClick={() => addProduct(_id)} primary outline>
-            Add To Cart
-          </Button>
+          <FlyingButton _id={_id} src={images?.[0]}>
+            Add to Cart
+          </FlyingButton>
         </PriceRow>
       </ProductInfoBox>
     </ProductWrapper>
