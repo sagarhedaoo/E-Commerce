@@ -22,7 +22,13 @@ const WhiteBox = styled.div`
   }
 `;
 
-const ProductWrapper = styled.div``;
+const ProductWrapper = styled.div`
+  button {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+`;
 
 const Title = styled(Link)`
   font-weight: normal;
