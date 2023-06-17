@@ -17,6 +17,9 @@ const ColsWrapper = styled.div`
   grid-template-columns: 1.2fr 0.8fr;
   gap: 40px;
   margin: 40px 0;
+  p {
+    margin: 13px;
+  }
 `;
 
 const CityHolder = styled.div`
@@ -38,9 +41,9 @@ export default function AccountPage() {
   const [postalCode, setPostalCode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const { data: session } = useSession();
-  const [addressLoaded, setaddressLoaded] = useState(false);
+  const [addressLoaded, setaddressLoaded] = useState(true);
   const [wishedProducts, setWishedProducts] = useState([]);
-  const [wishlistLoaded, setwishlistLoaded] = useState(false);
+  const [wishlistLoaded, setwishlistLoaded] = useState(true);
   async function logout() {
     await signOut();
   }
@@ -54,6 +57,11 @@ export default function AccountPage() {
   }
 
   useEffect(() => {
+    if (!session) {
+      return;
+    }
+    setaddressLoaded(false);
+    setwishlistLoaded(false);
     axios.get("/api/address").then((response) => {
       setName(response.data.name);
       setEmail(response.data.email);
@@ -67,7 +75,7 @@ export default function AccountPage() {
       setWishedProducts(response.data.map((wp) => wp.product));
       setwishlistLoaded(true);
     });
-  }, []);
+  }, [session]);
 
   function productRemovedFromWishlist(idToRemove) {
     setWishedProducts((products) => {
@@ -86,24 +94,29 @@ export default function AccountPage() {
                 <h2>Wishlist</h2>
                 {!wishlistLoaded && <Spinner fullWidth={true} />}
                 {wishlistLoaded && (
-                  <WishedProductsGrid>
-                    {wishedProducts.length > 0 &&
-                      wishedProducts.map((wp) => (
-                        <ProductBox
-                          key={wp._id}
-                          {...wp}
-                          wished={true}
-                          onRemoveFromWishlist={() => {
-                            productRemovedFromWishlist;
-                          }}
-                        />
-                      ))}
+                  <>
+                    <WishedProductsGrid>
+                      {wishedProducts.length > 0 &&
+                        wishedProducts.map((wp) => (
+                          <ProductBox
+                            key={wp._id}
+                            {...wp}
+                            wished={true}
+                            onRemoveFromWishlist={() => {
+                              productRemovedFromWishlist;
+                            }}
+                          />
+                        ))}
+                    </WishedProductsGrid>
                     {wishedProducts.length === 0 && (
                       <>
-                        <p>Your Wishlist is Empty</p>
+                        {session && <p>Your Wishlist is Empty</p>}
+                        {!session && (
+                          <p>Login to add Products to your wishlist</p>
+                        )}
                       </>
                     )}
-                  </WishedProductsGrid>
+                  </>
                 )}
               </WhiteBox>
             </RevealWrapper>
@@ -111,9 +124,9 @@ export default function AccountPage() {
           <div>
             <RevealWrapper delay={100}>
               <WhiteBox>
-                <h2>Account Details</h2>
+                <h2>{session ? "Account Details" : "Login"}</h2>
                 {!addressLoaded && <Spinner fullWidth={true} />}
-                {addressLoaded && (
+                {addressLoaded && session && (
                   <>
                     <Input
                       type="text"
@@ -175,7 +188,7 @@ export default function AccountPage() {
                 )}
                 {!session && (
                   <Button primary onClick={login}>
-                    Login
+                    Login with Google
                   </Button>
                 )}
               </WhiteBox>

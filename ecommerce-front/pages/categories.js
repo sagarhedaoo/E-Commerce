@@ -108,11 +108,13 @@ export async function getServerSideProps(ctx) {
     categoriesProducts[mainCatId] = products;
   }
 
-  const { user } = await getServerSession(ctx.req, ctx.res, authOptions);
-  const wishedProducts = await WishedProduct.find({
-    userEmail: user.email,
-    product: allFetchedProductsId,
-  });
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
+  const wishedProducts = session?.user
+    ? await WishedProduct.find({
+        userEmail: session?.user.email,
+        product: allFetchedProductsId,
+      })
+    : [];
 
   return {
     props: {
