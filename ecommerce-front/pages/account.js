@@ -69,6 +69,12 @@ export default function AccountPage() {
     });
   }, []);
 
+  function productRemovedFromWishlist(idToRemove) {
+    setWishedProducts((products) => {
+      return [...products.filter((p) => p._id.toString() !== idToRemove)];
+    });
+  }
+
   return (
     <>
       <Header />
@@ -83,8 +89,20 @@ export default function AccountPage() {
                   <WishedProductsGrid>
                     {wishedProducts.length > 0 &&
                       wishedProducts.map((wp) => (
-                        <ProductBox {...wp} wished={true} />
+                        <ProductBox
+                          key={wp._id}
+                          {...wp}
+                          wished={true}
+                          onRemoveFromWishlist={() => {
+                            productRemovedFromWishlist;
+                          }}
+                        />
                       ))}
+                    {wishedProducts.length === 0 && (
+                      <>
+                        <p>Your Wishlist is Empty</p>
+                      </>
+                    )}
                   </WishedProductsGrid>
                 )}
               </WhiteBox>
