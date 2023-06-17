@@ -2,6 +2,7 @@ import Button from "@/components/Button";
 import Center from "@/components/Center";
 import Header from "@/components/Header";
 import Input from "@/components/Input";
+import ProductBox from "@/components/ProductBox";
 import Spinner from "@/components/Spinner";
 import Title from "@/components/Title";
 import WhiteBox from "@/components/WhiteBox";
@@ -23,6 +24,12 @@ const CityHolder = styled.div`
   gap: 5px;
 `;
 
+const WishedProductsGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+`;
+
 export default function AccountPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -31,7 +38,9 @@ export default function AccountPage() {
   const [postalCode, setPostalCode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
   const { data: session } = useSession();
-  const [loaded, setLoaded] = useState(false);
+  const [addressLoaded, setaddressLoaded] = useState(false);
+  const [wishedProducts, setWishedProducts] = useState([]);
+  const [wishlistLoaded, setwishlistLoaded] = useState(false);
   async function logout() {
     await signOut();
   }
@@ -52,7 +61,11 @@ export default function AccountPage() {
       setCountry(response.data.country);
       setPostalCode(response.data.postalCode);
       setStreetAddress(response.data.streetAddress);
-      setLoaded(true);
+      setaddressLoaded(true);
+    });
+    axios.get("/api/wishlist").then((response) => {
+      setWishedProducts(response.data.map((wp) => wp.product));
+      setwishlistLoaded(true);
     });
   }, []);
 
@@ -65,6 +78,15 @@ export default function AccountPage() {
             <RevealWrapper delay={0}>
               <WhiteBox>
                 <h2>Wishlist</h2>
+                {!wishlistLoaded && <Spinner fullWidth={true} />}
+                {wishlistLoaded && (
+                  <WishedProductsGrid>
+                    {wishedProducts.length > 0 &&
+                      wishedProducts.map((wp) => (
+                        <ProductBox {...wp} wished={true} />
+                      ))}
+                  </WishedProductsGrid>
+                )}
               </WhiteBox>
             </RevealWrapper>
           </div>
@@ -72,8 +94,8 @@ export default function AccountPage() {
             <RevealWrapper delay={100}>
               <WhiteBox>
                 <h2>Account Details</h2>
-                {!loaded && <Spinner fullWidth={true} />}
-                {loaded && (
+                {!addressLoaded && <Spinner fullWidth={true} />}
+                {addressLoaded && (
                   <>
                     <Input
                       type="text"
