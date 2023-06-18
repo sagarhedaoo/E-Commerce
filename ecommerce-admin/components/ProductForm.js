@@ -24,10 +24,13 @@ export default function ProductForm({
   const [images, setImages] = useState(exisitingImages || []);
   const [isUploading, setIsUploading] = useState(false);
   const [categories, setCategories] = useState([]);
+  const [categoriesLoading, setCategoriesLoading] = useState(false);
   const router = useRouter();
   useEffect(() => {
+    setCategoriesLoading(true);
     axios.get("/api/categories").then((result) => {
       setCategories(result.data);
+      setCategoriesLoading(false);
     });
   }, []);
 
@@ -116,6 +119,7 @@ export default function ProductForm({
           ))}
       </select>
 
+      {categoriesLoading && <Spinner fullWidth={true} />}
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((p) => (
           <div className="">
