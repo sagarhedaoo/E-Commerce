@@ -62,7 +62,7 @@ function SettingsPage({ swal }) {
                 <option value={product._id}>{product.title}</option>
               ))}
           </select>
-          <label>Shipping price (in usd)</label>
+          <label>Shipping price (in USD)</label>
           <input
             type="number"
             value={shippingFee}
