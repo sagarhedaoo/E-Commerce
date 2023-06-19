@@ -1,13 +1,12 @@
-import Button from "@/components/Button";
-import { CartContext } from "@/components/CartContext";
-import Center from "@/components/Center";
 import Header from "@/components/Header";
-import Input from "@/components/Input";
-import Table from "@/components/Table";
-import axios from "axios";
+import styled from "styled-components";
+import Center from "@/components/Center";
+import Button from "@/components/Button";
 import { useContext, useEffect, useState } from "react";
-import { styled } from "styled-components";
-import WhiteBox from "@/components/WhiteBox";
+import { CartContext } from "@/components/CartContext";
+import axios from "axios";
+import Table from "@/components/Table";
+import Input from "@/components/Input";
 import { RevealWrapper } from "next-reveal";
 import { useSession } from "next-auth/react";
 
@@ -15,7 +14,7 @@ const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   @media screen and (min-width: 768px) {
-    grid-template-columns: 1.3fr 0.8fr;
+    grid-template-columns: 1.2fr 0.8fr;
   }
   gap: 40px;
   margin-top: 40px;
@@ -26,16 +25,12 @@ const ColumnsWrapper = styled.div`
     text-align: right;
   }
   table tr.subtotal td {
-    padding: 10px 0;
+    padding: 15px 0;
   }
   table tbody tr.subtotal td:nth-child(2) {
     font-size: 1.4rem;
   }
-  table tbody tr.total td:nth-child(2) {
-    text-align: right;
-  }
-  table tr.total td {
-    padding: 10px 0;
+  tr.total td {
     font-weight: bold;
   }
 `;
@@ -48,20 +43,32 @@ const Box = styled.div`
 
 const ProductInfoCell = styled.td`
   padding: 10px 0;
+  button {
+    padding: 0 !important;
+  }
 `;
 
 const ProductImageBox = styled.div`
-  width: 100px;
+  width: 70px;
   height: 100px;
-  padding: 10px;
-  border: 1px solid rgba(0, 0, 0, 0, 0.1);
+  padding: 2px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
   border-radius: 10px;
   img {
-    max-width: 140px;
-    max-height: 140px;
+    max-width: 60px;
+    max-height: 60px;
+  }
+  @media screen and (min-width: 768px) {
+    padding: 10px;
+    width: 100px;
+    height: 100px;
+    img {
+      max-width: 80px;
+      max-height: 80px;
+    }
   }
 `;
 
@@ -70,7 +77,7 @@ const QuantityLabel = styled.span`
   display: block;
   @media screen and (min-width: 768px) {
     display: inline-block;
-    padding: 0 10px;
+    padding: 0 6px;
   }
 `;
 
@@ -87,9 +94,9 @@ export default function CartPage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [city, setCity] = useState("");
-  const [country, setCountry] = useState("");
   const [postalCode, setPostalCode] = useState("");
   const [streetAddress, setStreetAddress] = useState("");
+  const [country, setCountry] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [shippingFee, setShippingFee] = useState(null);
   useEffect(() => {
@@ -101,12 +108,11 @@ export default function CartPage() {
       setProducts([]);
     }
   }, [cartProducts]);
-
   useEffect(() => {
     if (typeof window === "undefined") {
       return;
     }
-    if (window.location.href.includes("success")) {
+    if (window?.location.href.includes("success")) {
       setIsSuccess(true);
       clearCart();
     }
@@ -114,7 +120,6 @@ export default function CartPage() {
       setShippingFee(res.data.value);
     });
   }, []);
-
   useEffect(() => {
     if (!session) {
       return;
@@ -123,26 +128,17 @@ export default function CartPage() {
       setName(response.data.name);
       setEmail(response.data.email);
       setCity(response.data.city);
-      setCountry(response.data.country);
       setPostalCode(response.data.postalCode);
       setStreetAddress(response.data.streetAddress);
+      setCountry(response.data.country);
     });
   }, [session]);
-
   function moreOfThisProduct(id) {
     addProduct(id);
   }
-
   function lessOfThisProduct(id) {
     removeProduct(id);
   }
-
-  let productsTotal = 0;
-  for (const productId of cartProducts) {
-    const price = products.find((p) => p._id === productId)?.price || 0;
-    productsTotal += price;
-  }
-
   async function goToPayment() {
     const response = await axios.post("/api/checkout", {
       name,
@@ -157,6 +153,11 @@ export default function CartPage() {
       window.location = response.data.url;
     }
   }
+  let productsTotal = 0;
+  for (const productId of cartProducts) {
+    const price = products.find((p) => p._id === productId)?.price || 0;
+    productsTotal += price;
+  }
 
   if (isSuccess) {
     return (
@@ -164,25 +165,24 @@ export default function CartPage() {
         <Header />
         <Center>
           <ColumnsWrapper>
-            <WhiteBox>
-              <h1>Thank you for your purchase!</h1>
-              <p>We will email you when your order will be processed</p>
-            </WhiteBox>
+            <Box>
+              <h1>Thanks for your order!</h1>
+              <p>We will email you when your order will be sent.</p>
+            </Box>
           </ColumnsWrapper>
         </Center>
       </>
     );
   }
-
   return (
     <>
       <Header />
       <Center>
         <ColumnsWrapper>
           <RevealWrapper delay={0}>
-            <WhiteBox>
+            <Box>
               <h2>Cart</h2>
-              {!cartProducts?.length && <div>Your Cart is Empty</div>}
+              {!cartProducts?.length && <div>Your cart is empty</div>}
               {products?.length > 0 && (
                 <Table>
                   <thead>
@@ -197,12 +197,9 @@ export default function CartPage() {
                       <tr>
                         <ProductInfoCell>
                           <ProductImageBox>
-                            <img
-                              src={product.images[0]}
-                              alt="Product Image"
-                            ></img>
+                            <img src={product.images[0]} alt="" />
                           </ProductImageBox>
-                          {product.title}{" "}
+                          {product.title}
                         </ProductInfoCell>
                         <td>
                           <Button
@@ -214,9 +211,8 @@ export default function CartPage() {
                             {
                               cartProducts.filter((id) => id === product._id)
                                 .length
-                            }{" "}
+                            }
                           </QuantityLabel>
-
                           <Button
                             onClick={() => moreOfThisProduct(product._id)}
                           >
@@ -232,28 +228,25 @@ export default function CartPage() {
                     ))}
                     <tr className="subtotal">
                       <td colSpan={2}>Products</td>
-
-                      <td>$ {productsTotal}</td>
+                      <td>${productsTotal}</td>
                     </tr>
                     <tr className="subtotal">
                       <td colSpan={2}>Shipping</td>
                       <td>${shippingFee}</td>
                     </tr>
-                    <tr className="total">
-                      <td colSpan={2}>Total </td>
+                    <tr className="subtotal total">
+                      <td colSpan={2}>Total</td>
                       <td>${productsTotal + parseInt(shippingFee || 0)}</td>
                     </tr>
                   </tbody>
                 </Table>
               )}
-            </WhiteBox>
+            </Box>
           </RevealWrapper>
-
           {!!cartProducts?.length && (
             <RevealWrapper delay={100}>
-              <WhiteBox>
-                <h2>Order Info</h2>
-
+              <Box>
+                <h2>Order information</h2>
                 <Input
                   type="text"
                   placeholder="Name"
@@ -298,11 +291,10 @@ export default function CartPage() {
                   name="country"
                   onChange={(ev) => setCountry(ev.target.value)}
                 />
-
                 <Button black block onClick={goToPayment}>
-                  Continue to Payment
+                  Continue to payment
                 </Button>
-              </WhiteBox>
+              </Box>
             </RevealWrapper>
           )}
         </ColumnsWrapper>
