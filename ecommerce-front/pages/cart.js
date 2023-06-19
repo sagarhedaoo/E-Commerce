@@ -241,7 +241,7 @@ export default function CartPage() {
                     </tr>
                     <tr className="total">
                       <td colSpan={2}>Total </td>
-                      <td>${productsTotal + shippingFee}</td>
+                      <td>${productsTotal + parseInt(shippingFee || 0)}</td>
                     </tr>
                   </tbody>
                 </Table>
