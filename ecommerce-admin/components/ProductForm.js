@@ -122,14 +122,17 @@ export default function ProductForm({
       {categoriesLoading && <Spinner fullWidth={true} />}
       {propertiesToFill.length > 0 &&
         propertiesToFill.map((p) => (
-          <div className="">
+          <div key={p.name} className="">
             <label>{p.name[0].toUpperCase() + p.name.substring(1)}</label>
             <select
               value={productProperties[p.name]}
               onChange={(ev) => setProductProp(p.name, ev.target.value)}
             >
               {p.values.map((v) => (
-                <option value={v}> {v}</option>
+                <option key={v} value={v}>
+                  {" "}
+                  {v}
+                </option>
               ))}
             </select>
             <div> </div>

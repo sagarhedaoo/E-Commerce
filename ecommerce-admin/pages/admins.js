@@ -108,7 +108,7 @@ function AdminsPage({ swal }) {
           )}
           {adminEmails.length > 0 &&
             adminEmails.map((adminEmail) => (
-              <tr>
+              <tr key={adminEmail._id}>
                 <td>{adminEmail.email}</td>
                 <td>
                   {adminEmail.createdAt && prettyDate(adminEmail.createdAt)}
